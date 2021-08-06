@@ -1,0 +1,44 @@
+syntax = "proto3";
+package protos;
+option go_package = "./protos";
+
+message DNSList {
+  //list of name-ip, such as map["google.com"] = 10.10.10.10
+  map<string, string> List = 1;
+}
+
+message STR {
+  string Content = 1;
+}
+
+message Pair {
+  string Name = 1;
+  string IP = 2;
+}
+
+message STRs {
+  repeated string Contents = 1;
+}
+
+message Pairs {
+  Pair SRC = 1;
+  Pair DST = 2;
+}
+
+service DNS {
+  //Search by Name.
+  //Return the IP.
+  rpc GetIP(STR) returns (STRs) {}
+
+  //Add a pair of name-ip reflection into the list
+  //Return an error message or nil
+  rpc AddDNS(Pair) returns (STR) {}
+
+  //Delete a pair of name-ip reflection by name
+  //Return an error message or nil
+  rpc DeleteDNS(Pair) returns (STR) {}
+
+  //Modify a name to a new ip
+  //Return an error message or nil
+  rpc ModifyDNS(Pairs) returns (STR) {}
+}
